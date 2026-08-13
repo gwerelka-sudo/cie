@@ -198,6 +198,10 @@ Pages are lazily created on first save; each page persists as its own file, and 
 
 `/cie coloring <get|set|reset> <key|value|count|bracket> [hex or &color]` — customize the colors the mod uses when printing structured JSON/`give`-style output in chat. Persisted to disk, resettable per-slot to the built-in defaults.
 
+## !!NEW!! UIs painting
+
+`/cie paint <key> set/get/reset` - Paint parts of UIs to your colors
+
 ## !!NEW!! Chat color picker
 
 - Open chat and press small button in down left corner of your screen to open color picker.
