@@ -3,7 +3,9 @@
   "package": "com.cie.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "HandledScreenMixin"
+    "HandledScreenMixin",
+    "ChatScreenMixin",
+    "ScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
