@@ -28,6 +28,7 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.command.CommandRegistryAccess;
+import com.cie.util.UiColorUtil;
 import net.minecraft.command.CommandSource;
 import net.minecraft.command.argument.IdentifierArgumentType;
 import net.minecraft.command.argument.RegistryEntryReferenceArgumentType;
@@ -188,8 +189,101 @@ public final class CIECommand {
                 .then(soundNode())
                 .then(storagePagesNode())
                 .then(coloringNode())
+                .then(paintNode())
+                .then(pickColorNode())
                 .then(livePreviewNode())
                 .then(editNode(buildContext));
+    }
+
+    // ================================================================
+    //  /cie paint <ключ> get/set/reset — покраска GUI-элементов через
+    //  UiColorUtil (см. util/UiColorUtil.java). Работает для любых
+    //  зарегистрированных ключей: colorPicker.*, armorStandMenu.* и т.д.
+    // ================================================================
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> paintNode() {
+        return ClientCommandManager.literal("paint")
+                .then(ClientCommandManager.argument("key", StringArgumentType.word())
+                        .suggests((ctx, builder) -> CommandSource.suggestMatching(UiColorUtil.knownKeys(), builder))
+                        .then(ClientCommandManager.literal("get")
+                                .executes(CIECommand::uiColorPaintGet))
+                        .then(ClientCommandManager.literal("reset")
+                                .executes(CIECommand::uiColorPaintReset))
+                        .then(ClientCommandManager.literal("set")
+                                .then(ClientCommandManager.argument("argb", StringArgumentType.word())
+                                        .executes(CIECommand::uiColorPaintSet))));
+    }
+
+    private static int uiColorPaintGet(CommandContext<FabricClientCommandSource> ctx) {
+        String key = StringArgumentType.getString(ctx, "key");
+        int argb = UiColorUtil.get(key);
+        boolean overridden = UiColorUtil.isOverridden(key);
+        sendLangFeedback(ctx.getSource(), "colorpicker_paint_status",
+                key, String.format("%08X", argb), overridden ? "override" : "default");
+        return 1;
+    }
+
+    private static int uiColorPaintSet(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        String key = StringArgumentType.getString(ctx, "key");
+        String raw = StringArgumentType.getString(ctx, "argb");
+        int argb = parseArgb(ctx, raw);
+        UiColorUtil.set(key, argb);
+        sendLangFeedback(ctx.getSource(), "colorpicker_paint_set", key, String.format("%08X", argb));
+        return 1;
+    }
+
+    private static int uiColorPaintReset(CommandContext<FabricClientCommandSource> ctx) {
+        String key = StringArgumentType.getString(ctx, "key");
+        UiColorUtil.reset(key);
+        sendLangFeedback(ctx.getSource(), "colorpicker_paint_reset", key, String.format("%08X", UiColorUtil.get(key)));
+        return 1;
+    }
+
+    // ================================================================
+    //  /cie pickColor — замораживает кадр и даёт взять цвет любого
+    //  пикселя на экране мышью (эффект "eyedropper"), копирует HEX
+    //  в системный клипборд. Реализация — com.cie.screen.ColorPickScreen.
+    // ================================================================
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> pickColorNode() {
+        return ClientCommandManager.literal("pickColor")
+                .executes(CIECommand::openColorPickScreen);
+    }
+
+    private static int openColorPickScreen(CommandContext<FabricClientCommandSource> ctx) {
+        // Та же причина, что и у openMouseHistory: ChatScreen после
+        // выполнения команды сам закрывает себя через setScreen(null),
+        // затирая любой экран, открытый синхронно внутри execute-хендлера.
+        // Откладываем открытие на следующий тик клиента.
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.execute(() -> {
+            try {
+                client.setScreen(new com.cie.screen.ColorPickScreen());
+            } catch (Throwable t) {
+                t.printStackTrace();
+            }
+        });
+        return 1;
+    }
+
+    /**
+     * В отличие от parseHex(...) (используется у /cie color dye|map),
+     * здесь нужно принимать 8-значный ARGB с альфой — а такое значение
+     * (например FFFFFFFF) не влезает в Integer.parseInt со знаком и там
+     * просто упадёт с переполнением. Парсим через Long и приводим к int.
+     * 6-значный вход (без альфы) трактуем как непрозрачный (альфа = FF).
+     */
+    private static int parseArgb(CommandContext<FabricClientCommandSource> ctx, String hex) throws CommandSyntaxException {
+        String clean = hex.replace("#", "");
+        try {
+            if (clean.length() <= 6) {
+                long rgb = Long.parseLong(clean, 16);
+                return (int) (0xFF000000L | rgb);
+            }
+            return (int) Long.parseLong(clean, 16);
+        } catch (NumberFormatException e) {
+            throw createException("potion_bad_color", hex);
+        }
     }
 
     private static LiteralArgumentBuilder<FabricClientCommandSource> trimNode() {
@@ -783,6 +877,87 @@ public final class CIECommand {
     private static final List<String> EQUIPMENT_SLOTS = List.of("mainhand", "offhand", "feet", "legs", "chest", "head", "body");
     private static final SuggestionProvider<FabricClientCommandSource> EQUIPMENT_SLOT_SUGGESTIONS =
             (ctx, builder) -> CommandSource.suggestMatching(EQUIPMENT_SLOTS, builder);
+
+    // ================================================================
+    //  /cie edit playerHead ...  (PROFILE — голова игрока, minecraft:profile)
+    // ================================================================
+
+    private static final SuggestionProvider<FabricClientCommandSource> ONLINE_PLAYER_SUGGESTIONS =
+            (ctx, builder) -> CommandSource.suggestMatching(PlayerHeadUtil.onlinePlayerNames(), builder);
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> playerHeadNode() {
+        return ClientCommandManager.literal("playerHead")
+                .then(ClientCommandManager.literal("get").executes(CIECommand::getPlayerHead))
+                .then(ClientCommandManager.literal("reset").executes(CIECommand::resetPlayerHead))
+                .then(ClientCommandManager.literal("set")
+                        .then(ClientCommandManager.argument("texture", StringArgumentType.greedyString())
+                                .executes(CIECommand::setPlayerHeadTexture)))
+                .then(ClientCommandManager.literal("getFromPlayer")
+                        .then(ClientCommandManager.argument("player", StringArgumentType.word())
+                                .suggests(ONLINE_PLAYER_SUGGESTIONS)
+                                .executes(CIECommand::getPlayerHeadFromPlayer)));
+    }
+
+    private static int getPlayerHead(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ItemStack stack = requireItem(ctx);
+        String info = PlayerHeadUtil.describe(stack);
+        if (info == null) {
+            sendLangFeedback(ctx.getSource(), "playerhead_empty");
+            return 0;
+        }
+        sendLangFeedback(ctx.getSource(), "playerhead_status", info);
+        return 1;
+    }
+
+    private static int resetPlayerHead(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        PlayerHeadUtil.reset(stack);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "playerhead_reset");
+        return 1;
+    }
+
+    private static int setPlayerHeadTexture(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        String base64 = StringArgumentType.getString(ctx, "texture");
+        PlayerHeadUtil.setTexture(stack, base64);
+
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "playerhead_set");
+        return 1;
+    }
+
+    /**
+     * Профиль берётся ИСКЛЮЧИТЕЛЬНО из клиентского таб-листа (см.
+     * PlayerHeadUtil про SkinsRestorer) — если игрока сейчас не видно в
+     * таб-листе (не в сети / пакет ещё не пришёл), команда падает с
+     * понятной ошибкой, а не лезет за скином куда-то ещё.
+     */
+    private static int getPlayerHeadFromPlayer(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+
+        String name = StringArgumentType.getString(ctx, "player");
+        var profile = PlayerHeadUtil.findOnlineProfile(name);
+        if (profile == null) {
+            throw createException("playerhead_player_not_found", name);
+        }
+        UndoUtil.pushSnapshot(player, stack);
+
+        PlayerHeadUtil.setFromGameProfile(stack, profile);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "playerhead_set_from_player", name);
+        return 1;
+    }
 
     private static LiteralArgumentBuilder<FabricClientCommandSource> equipableNode() {
         return ClientCommandManager.literal("equipable")
@@ -3918,6 +4093,7 @@ public final class CIECommand {
                 .then(countNode())
                 .then(durabilityNode())
                 .then(equipableNode())
+                .then(playerHeadNode())
                 .then(foodNode())
                 .then(componentNode())
                 .then(materialNode(buildContext))
@@ -3943,6 +4119,7 @@ public final class CIECommand {
                 .then(signNode())
                 .then(entitySettingsNode())
                 .then(villagerDataNode())
+                .then(armorStandNode())
                 .then(spawnerNode())
                 .then(enchantableNode())
                 .then(containerNode())
@@ -6010,45 +6187,20 @@ public final class CIECommand {
                         .then(ClientCommandManager.literal("rainbow")
                                 .then(ClientCommandManager.argument("format", GradientFormatArgumentType.formatName())
                                         .suggests(GRADIENT_FORMAT_SUGGESTIONS)
-                                        .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                .executes(ctx -> createRainbowCommand(ctx, 100, 100, 1, 100)))
                                         .then(ClientCommandManager.argument("saturation", IntegerArgumentType.integer(0, 100))
-                                                .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                        .executes(ctx -> createRainbowCommand(ctx,
-                                                                IntegerArgumentType.getInteger(ctx, "saturation"), 100, 1, 100)))
                                                 .then(ClientCommandManager.argument("brightness", IntegerArgumentType.integer(0, 100))
-                                                        .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                                .executes(ctx -> createRainbowCommand(ctx,
-                                                                        IntegerArgumentType.getInteger(ctx, "saturation"),
-                                                                        IntegerArgumentType.getInteger(ctx, "brightness"), 1, 100)))
                                                         .then(ClientCommandManager.argument("shade", IntegerArgumentType.integer(1, 7))
-                                                                .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                                        .executes(ctx -> createRainbowCommand(ctx,
-                                                                                IntegerArgumentType.getInteger(ctx, "saturation"),
-                                                                                IntegerArgumentType.getInteger(ctx, "brightness"),
-                                                                                IntegerArgumentType.getInteger(ctx, "shade"), 100)))
                                                                 .then(ClientCommandManager.argument("step", IntegerArgumentType.integer(1, 100))
                                                                         .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                                                .executes(ctx -> createRainbowCommand(ctx,
-                                                                                        IntegerArgumentType.getInteger(ctx, "saturation"),
-                                                                                        IntegerArgumentType.getInteger(ctx, "brightness"),
-                                                                                        IntegerArgumentType.getInteger(ctx, "shade"),
-                                                                                        IntegerArgumentType.getInteger(ctx, "step"))))))))))
+                                                                                .executes(CIECommand::createRainbowCommand))))))))
                         .then(ClientCommandManager.literal("alternation")
                                 .then(ClientCommandManager.argument("format", GradientFormatArgumentType.formatName())
                                         .suggests(GRADIENT_FORMAT_SUGGESTIONS)
-                                        .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                .executes(ctx -> createAlternationCommand(ctx, 1, null)))
                                         .then(ClientCommandManager.argument("distance", IntegerArgumentType.integer(1, 100))
-                                                .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                        .executes(ctx -> createAlternationCommand(ctx,
-                                                                IntegerArgumentType.getInteger(ctx, "distance"), null)))
                                                 .then(ClientCommandManager.argument("hexs", GradientFormatArgumentType.formatName())
                                                         .suggests(GRADIENT_PRESET_HEXS_SUGGESTIONS)
                                                         .then(ClientCommandManager.argument("text", StringArgumentType.greedyString())
-                                                                .executes(ctx -> createAlternationCommand(ctx,
-                                                                        IntegerArgumentType.getInteger(ctx, "distance"),
-                                                                        StringArgumentType.getString(ctx, "hexs"))))))))
+                                                                .executes(CIECommand::createAlternationCommand))))))
                         .then(ClientCommandManager.literal("random")
                                 .then(ClientCommandManager.argument("format", GradientFormatArgumentType.formatName())
                                         .suggests(GRADIENT_FORMAT_SUGGESTIONS)
@@ -6225,34 +6377,38 @@ public final class CIECommand {
         return 1;
     }
 
-    private static int createRainbowCommand(CommandContext<FabricClientCommandSource> ctx, int saturation, int brightness, int shade, int step) {
+    private static int createRainbowCommand(CommandContext<FabricClientCommandSource> ctx) {
         String format = StringArgumentType.getString(ctx, "format");
         if (!GradientFormatUtil.exists(format)) {
             sendLangFeedback(ctx.getSource(), "gradient_format_unknown", format);
             return 0;
         }
+        int saturation = IntegerArgumentType.getInteger(ctx, "saturation");
+        int brightness = IntegerArgumentType.getInteger(ctx, "brightness");
+        int shade = IntegerArgumentType.getInteger(ctx, "shade");
+        int step = IntegerArgumentType.getInteger(ctx, "step");
         String text = StringArgumentType.getString(ctx, "text");
         List<GradientColorUtil.CharColor> chars = GradientColorUtil.rainbow(text, saturation, brightness, shade, step);
         sendGradientResult(ctx.getSource(), chars, format);
         return 1;
     }
 
-    private static int createAlternationCommand(CommandContext<FabricClientCommandSource> ctx, int distance, String hexsCsv) {
+    private static int createAlternationCommand(CommandContext<FabricClientCommandSource> ctx) {
         String format = StringArgumentType.getString(ctx, "format");
         if (!GradientFormatUtil.exists(format)) {
             sendLangFeedback(ctx.getSource(), "gradient_format_unknown", format);
             return 0;
         }
-        String text = StringArgumentType.getString(ctx, "text");
-        List<String> hexs = null;
-        if (hexsCsv != null) {
-            try {
-                hexs = resolveHexs(hexsCsv);
-            } catch (IllegalArgumentException e) {
-                reportHexsError(ctx.getSource(), hexsCsv, e);
-                return 0;
-            }
+        int distance = IntegerArgumentType.getInteger(ctx, "distance");
+        String hexsRaw = StringArgumentType.getString(ctx, "hexs");
+        List<String> hexs;
+        try {
+            hexs = resolveHexs(hexsRaw);
+        } catch (IllegalArgumentException e) {
+            reportHexsError(ctx.getSource(), hexsRaw, e);
+            return 0;
         }
+        String text = StringArgumentType.getString(ctx, "text");
         List<GradientColorUtil.CharColor> chars = GradientColorUtil.alternation(text, distance, hexs);
         sendGradientResult(ctx.getSource(), chars, format);
         return 1;
@@ -6297,20 +6453,37 @@ public final class CIECommand {
                 ? GradientFormatUtil.renderJsonArray(chars)
                 : buildRawCode(chars, format);
 
-        MutableText copyTextButton = Text.literal(" [" + CIELang.get("gradient_copy_text_button") + "]")
-                .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FF55))
-                        .withClickEvent(new ClickEvent.CopyToClipboard(plainText)));
-        MutableText copyCodeButton = Text.literal(" [" + CIELang.get("gradient_copy_code_button") + "]")
-                .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0x55FF55))
-                        .withClickEvent(new ClickEvent.CopyToClipboard(code)));
+        RegistryWrapper.WrapperLookup registries = getRegistries();
+
+        // Текст кнопок в lang-файле — это MiniMessage-разметка
+        // (<dark_gray>[<gradient:...>...</gradient>]), а не голый текст.
+        // Text.literal(...) её не парсит и печатает угловые теги как есть.
+        // Как и в sendCopyableRaw: parse() -> Component (вешаем clickEvent) ->
+        // toVanillaText() -> нормальный раскрашенный vanilla Text.
+        Component copyTextComponent = MiniMessageBridge.parse(CIELang.get("gradient_copy_text_button"))
+                .clickEvent(net.kyori.adventure.text.event.ClickEvent.copyToClipboard(plainText));
+        Component copyCodeComponent = MiniMessageBridge.parse(CIELang.get("gradient_copy_code_button"))
+                .clickEvent(net.kyori.adventure.text.event.ClickEvent.copyToClipboard(code));
+
+        MutableText copyTextButton = Text.literal(" ").append(MiniMessageBridge.toVanillaText(copyTextComponent, registries));
+        MutableText copyCodeButton = Text.literal(" ").append(MiniMessageBridge.toVanillaText(copyCodeComponent, registries));
 
         MutableText previewLine = coloredText.copy().append(copyTextButton);
-        MutableText codeLine = Text.literal(code)
-                .setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0xAAAAAA)))
+        // Раскраска кода через colorizeStructured — те же настраиваемые цвета
+        // (/cie coloring get/set/reset), что и у остального структурированного
+        // вывода (/give ...[...]), вместо плоского нераскрашенного текста.
+        MutableText codeLine = Text.empty()
+                .append(colorizeStructured(code))
                 .append(copyCodeButton);
 
-        source.sendFeedback(previewLine);
-        source.sendFeedback(codeLine);
+        // previewLine и codeLine объединяются в ОДНО сообщение с явным "\n" —
+        // два отдельных sendFeedback() визуально слипались в одну строку чата.
+        Text finalMessage = Text.empty()
+                .append(previewLine)
+                .append(Text.literal("\n"))
+                .append(codeLine);
+
+        source.sendFeedback(finalMessage);
     }
 
     private static String buildRawCode(List<GradientColorUtil.CharColor> chars, String format) {
@@ -7988,6 +8161,226 @@ public final class CIECommand {
     }
 
     // ================================================================    //  /cie edit villagerData ...  (ENTITY_DATA — тот же механизм, что и    //  entitySettingsNode, только villager-специфичные поля, см.    //  VillagerDataUtil)    // ================================================================     private static final SuggestionProvider<FabricClientCommandSource> VILLAGER_PROFESSION_SUGGESTIONS =            (ctx, builder) -> {                for (Identifier id : Registries.VILLAGER_PROFESSION.getIds()) {                    builder.suggest(id.toString());                }                return builder.buildFuture();            };     private static final SuggestionProvider<FabricClientCommandSource> VILLAGER_BIOME_SUGGESTIONS =            (ctx, builder) -> {                for (Identifier id : Registries.VILLAGER_TYPE.getIds()) {                    builder.suggest(id.toString());                }                return builder.buildFuture();            };     private static LiteralArgumentBuilder<FabricClientCommandSource> villagerDataNode() {        return ClientCommandManager.literal("villagerData")                .then(ClientCommandManager.literal("profession")                        .then(ClientCommandManager.literal("get").executes(CIECommand::getVillagerProfession))                        .then(ClientCommandManager.literal("set")                                .then(ClientCommandManager.argument("prof", StringArgumentType.word())                                        .suggests(VILLAGER_PROFESSION_SUGGESTIONS)                                        .executes(CIECommand::setVillagerProfession)))                        .then(ClientCommandManager.literal("reset").executes(CIECommand::resetVillagerProfession)))                .then(ClientCommandManager.literal("biome")                        .then(ClientCommandManager.literal("get").executes(CIECommand::getVillagerBiome))                        .then(ClientCommandManager.literal("set")                                .then(ClientCommandManager.argument("biome", StringArgumentType.word())                                        .suggests(VILLAGER_BIOME_SUGGESTIONS)                                        .executes(CIECommand::setVillagerBiome)))                        .then(ClientCommandManager.literal("reset").executes(CIECommand::resetVillagerBiome)))                .then(ClientCommandManager.literal("level")                        .then(ClientCommandManager.literal("get").executes(CIECommand::getVillagerLevel))                        .then(ClientCommandManager.literal("set")                                .then(ClientCommandManager.argument("level", IntegerArgumentType.integer(1, 5))                                        .executes(CIECommand::setVillagerLevel)))                        .then(ClientCommandManager.literal("reset").executes(CIECommand::resetVillagerLevel)))                .then(ClientCommandManager.literal("willing")                        .then(ClientCommandManager.literal("get").executes(CIECommand::getVillagerWilling))                        .then(ClientCommandManager.literal("set")                                .then(ClientCommandManager.argument("value", BoolArgumentType.bool())                                        .executes(CIECommand::setVillagerWilling))))                .then(ClientCommandManager.literal("lastRestock")                        .then(ClientCommandManager.literal("get").executes(CIECommand::getVillagerLastRestock))                        .then(ClientCommandManager.literal("set")                                .then(ClientCommandManager.argument("last", LongArgumentType.longArg())                                        .executes(CIECommand::setVillagerLastRestock)))                        .then(ClientCommandManager.literal("reset").executes(CIECommand::resetVillagerLastRestock)))
+
+    // ================================================================
+    //  /cie edit armorStand ...  (ENTITY_DATA — тот же механизм, что и
+    //  entitySettingsNode/villagerDataNode, только armor_stand-специфичные
+    //  поля: флаги, поза шести частей и пресеты поз. См. ArmorStandDataUtil.
+    //  Экипировка (голова/грудь/ноги/ботинки/руки) НЕ дублируется тут
+    //  отдельными командами — она уже полностью доступна через
+    //  /cie edit EntitySettings equipment <slot> ..., та же ENTITY_DATA,
+    //  и используется напрямую из /cie edit armorStand menu.
+    // ================================================================
+
+    private static final SuggestionProvider<FabricClientCommandSource> ARMOR_STAND_PRESET_SUGGESTIONS =
+            (ctx, builder) -> CommandSource.suggestMatching(ArmorStandDataUtil.presetNames(), builder);
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> armorStandNode() {
+        return ClientCommandManager.literal("armorStand")
+                .then(ClientCommandManager.literal("menu").executes(CIECommand::openArmorStandMenu))
+                .then(armorStandFlagNode("noBasePlate", "NoBasePlate"))
+                .then(armorStandFlagNode("small", "Small"))
+                .then(armorStandFlagNode("showArms", "ShowArms"))
+                .then(armorStandFlagNode("invisible", "Invisible"))
+                .then(armorStandFlagNode("marker", "Marker"))
+                .then(ClientCommandManager.literal("pose")
+                        .then(armorStandPosePartNode("head", ArmorStandDataUtil.Part.HEAD))
+                        .then(armorStandPosePartNode("body", ArmorStandDataUtil.Part.BODY))
+                        .then(armorStandPosePartNode("leftArm", ArmorStandDataUtil.Part.LEFT_ARM))
+                        .then(armorStandPosePartNode("rightArm", ArmorStandDataUtil.Part.RIGHT_ARM))
+                        .then(armorStandPosePartNode("leftLeg", ArmorStandDataUtil.Part.LEFT_LEG))
+                        .then(armorStandPosePartNode("rightLeg", ArmorStandDataUtil.Part.RIGHT_LEG))
+                        .then(ClientCommandManager.literal("preset")
+                                .then(ClientCommandManager.literal("list").executes(CIECommand::listArmorStandPresets))
+                                .then(ClientCommandManager.literal("clear").executes(CIECommand::clearArmorStandPresets))
+                                .then(ClientCommandManager.literal("remove")
+                                        .then(ClientCommandManager.argument("preset", StringArgumentType.word())
+                                                .suggests(ARMOR_STAND_PRESET_SUGGESTIONS)
+                                                .executes(CIECommand::removeArmorStandPreset)))
+                                .then(ClientCommandManager.literal("add")
+                                        .then(ClientCommandManager.argument("preset", StringArgumentType.word())
+                                                .executes(CIECommand::addArmorStandPreset)))
+                                .then(ClientCommandManager.literal("apply")
+                                        .then(ClientCommandManager.argument("preset", StringArgumentType.word())
+                                                .suggests(ARMOR_STAND_PRESET_SUGGESTIONS)
+                                                .executes(CIECommand::applyArmorStandPreset)))));
+    }
+
+    // -- flags (noBasePlate/small/showArms/invisible/marker) --
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> armorStandFlagNode(String literalName, String nbtKey) {
+        return ClientCommandManager.literal(literalName)
+                .then(ClientCommandManager.literal("get").executes(ctx -> getArmorStandFlag(ctx, literalName, nbtKey)))
+                .then(ClientCommandManager.literal("set")
+                        .then(ClientCommandManager.argument("value", BoolArgumentType.bool())
+                                .executes(ctx -> setArmorStandFlag(ctx, literalName, nbtKey))))
+                .then(ClientCommandManager.literal("reset").executes(ctx -> resetArmorStandFlag(ctx, literalName, nbtKey)));
+    }
+
+    private static int getArmorStandFlag(CommandContext<FabricClientCommandSource> ctx, String literalName, String nbtKey) throws CommandSyntaxException {
+        ItemStack stack = requireItem(ctx);
+        sendLangFeedback(ctx.getSource(), "entity_flag_status", literalName, ArmorStandDataUtil.getFlag(stack, nbtKey));
+        return 1;
+    }
+
+    private static int setArmorStandFlag(CommandContext<FabricClientCommandSource> ctx, String literalName, String nbtKey) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        boolean value = BoolArgumentType.getBool(ctx, "value");
+        ArmorStandDataUtil.setFlag(stack, nbtKey, value);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "entity_flag_set", literalName, value);
+        return 1;
+    }
+
+    private static int resetArmorStandFlag(CommandContext<FabricClientCommandSource> ctx, String literalName, String nbtKey) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        ArmorStandDataUtil.setFlag(stack, nbtKey, false);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "entity_flag_reset", literalName);
+        return 1;
+    }
+
+    // -- pose: <part> get | <part> <axis> get|set|reset --
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> armorStandPosePartNode(String literalName, ArmorStandDataUtil.Part part) {
+        return ClientCommandManager.literal(literalName)
+                .then(ClientCommandManager.literal("get").executes(ctx -> getArmorStandPoseAll(ctx, literalName, part)))
+                .then(armorStandPoseAxisNode("x", literalName, part, ArmorStandDataUtil.Axis.X))
+                .then(armorStandPoseAxisNode("y", literalName, part, ArmorStandDataUtil.Axis.Y))
+                .then(armorStandPoseAxisNode("z", literalName, part, ArmorStandDataUtil.Axis.Z));
+    }
+
+    private static LiteralArgumentBuilder<FabricClientCommandSource> armorStandPoseAxisNode(
+            String axisLiteral, String partLiteral, ArmorStandDataUtil.Part part, ArmorStandDataUtil.Axis axis) {
+        return ClientCommandManager.literal(axisLiteral)
+                .then(ClientCommandManager.literal("get").executes(ctx -> getArmorStandPoseAxis(ctx, partLiteral, axisLiteral, part, axis)))
+                .then(ClientCommandManager.literal("set")
+                        .then(ClientCommandManager.argument("amt", FloatArgumentType.floatArg())
+                                .executes(ctx -> setArmorStandPoseAxis(ctx, partLiteral, axisLiteral, part, axis))))
+                .then(ClientCommandManager.literal("reset").executes(ctx -> resetArmorStandPoseAxis(ctx, partLiteral, axisLiteral, part, axis)));
+    }
+
+    private static int getArmorStandPoseAll(CommandContext<FabricClientCommandSource> ctx, String partLiteral, ArmorStandDataUtil.Part part) throws CommandSyntaxException {
+        ItemStack stack = requireItem(ctx);
+        float[] v = ArmorStandDataUtil.getPoseAll(stack, part);
+        sendLangFeedback(ctx.getSource(), "armorstand_pose_all_status", partLiteral, v[0], v[1], v[2]);
+        return 1;
+    }
+
+    private static int getArmorStandPoseAxis(CommandContext<FabricClientCommandSource> ctx, String partLiteral, String axisLiteral,
+                                             ArmorStandDataUtil.Part part, ArmorStandDataUtil.Axis axis) throws CommandSyntaxException {
+        ItemStack stack = requireItem(ctx);
+        sendLangFeedback(ctx.getSource(), "armorstand_pose_status", partLiteral, axisLiteral, ArmorStandDataUtil.getPoseAxis(stack, part, axis));
+        return 1;
+    }
+
+    private static int setArmorStandPoseAxis(CommandContext<FabricClientCommandSource> ctx, String partLiteral, String axisLiteral,
+                                             ArmorStandDataUtil.Part part, ArmorStandDataUtil.Axis axis) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        float amt = FloatArgumentType.getFloat(ctx, "amt");
+        ArmorStandDataUtil.setPoseAxis(stack, part, axis, amt);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "armorstand_pose_set", partLiteral, axisLiteral, amt);
+        return 1;
+    }
+
+    private static int resetArmorStandPoseAxis(CommandContext<FabricClientCommandSource> ctx, String partLiteral, String axisLiteral,
+                                               ArmorStandDataUtil.Part part, ArmorStandDataUtil.Axis axis) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        UndoUtil.pushSnapshot(player, stack);
+
+        ArmorStandDataUtil.resetPoseAxis(stack, part, axis);
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "armorstand_pose_reset", partLiteral, axisLiteral);
+        return 1;
+    }
+
+    // -- pose presets --
+
+    private static int listArmorStandPresets(CommandContext<FabricClientCommandSource> ctx) {
+        List<String> names = ArmorStandDataUtil.presetNames();
+        if (names.isEmpty()) {
+            sendLangFeedback(ctx.getSource(), "armorstand_preset_list_empty");
+            return 0;
+        }
+        sendLangFeedback(ctx.getSource(), "armorstand_preset_list", String.join(", ", names));
+        return 1;
+    }
+
+    private static int clearArmorStandPresets(CommandContext<FabricClientCommandSource> ctx) {
+        int count = ArmorStandDataUtil.presetNames().size();
+        ArmorStandDataUtil.clearPresets();
+        sendLangFeedback(ctx.getSource(), "armorstand_preset_cleared", count);
+        return 1;
+    }
+
+    private static int removeArmorStandPreset(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        String name = StringArgumentType.getString(ctx, "preset");
+        if (!ArmorStandDataUtil.removePreset(name)) {
+            throw createException("armorstand_preset_unknown", name);
+        }
+        sendLangFeedback(ctx.getSource(), "armorstand_preset_removed", name);
+        return 1;
+    }
+
+    private static int addArmorStandPreset(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ItemStack stack = requireItem(ctx);
+        String name = StringArgumentType.getString(ctx, "preset");
+        ArmorStandDataUtil.addPreset(name, stack);
+        sendLangFeedback(ctx.getSource(), "armorstand_preset_created", name);
+        return 1;
+    }
+
+    private static int applyArmorStandPreset(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        if (stack.isEmpty()) throw createException("no_item");
+        String name = StringArgumentType.getString(ctx, "preset");
+        UndoUtil.pushSnapshot(player, stack);
+
+        if (!ArmorStandDataUtil.applyPreset(stack, name)) {
+            throw createException("armorstand_preset_unknown", name);
+        }
+        syncHandItem(player, stack);
+        sendLangFeedback(ctx.getSource(), "armorstand_preset_applied", name);
+        return 1;
+    }
+
+    // -- menu (кастомный неванильный экран, см. com.cie.screen.ArmorStandEditScreen) --
+
+    private static int openArmorStandMenu(CommandContext<FabricClientCommandSource> ctx) throws CommandSyntaxException {
+        ClientPlayerEntity player = requireCreativePlayer(ctx);
+        ItemStack stack = player.getMainHandStack();
+        // В отличие от остальных команд armorStand (которые, как и
+        // entitySettingsNode/villagerDataNode, работают с ENTITY_DATA любого
+        // предмета в руке), меню жёстко требует именно armor_stand — превью
+        // в нём рендерит реальную ArmorStandEntity и рисует paperdoll её
+        // слотов, так что для любого другого предмета оно просто не имеет смысла.
+        if (stack.isEmpty() || stack.getItem() != net.minecraft.item.Items.ARMOR_STAND) {
+            throw createException("armorstand_not_held");
+        }
+
+        RegistryWrapper.WrapperLookup registries = getRegistries();
+        int selectedSlot = player.getInventory().getSelectedSlot();
+        MinecraftClient client = MinecraftClient.getInstance();
+        client.execute(() -> client.setScreen(
+                new com.cie.screen.armorStandEditScreen(stack.copy(), selectedSlot, registries)));
+        return 1;
+    }
 
     private static LiteralArgumentBuilder<FabricClientCommandSource> spawnerNode() {
         return ClientCommandManager.literal("spawner")
