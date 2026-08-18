@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "cie",
+  "version": "${version}",
+  "name": "CIE - Command Item Editor",
+  "description": "✒ §lCIE§r — редактор предметов прямо из чата, без команд-простыней и внешних тулзов.\nИмя, лор, книги, зачарования, зелья, атрибуты, фейерверки, баннеры, еда и любые другие компоненты — всё через понятные §lget/set§r команды.\nПолная поддержка MiniMessage: §lградиенты§r, §lhover§r, §lclick§r, §lrainbow§r и §lмного другого§r.\n§lStorage§r — сохраняй готовые предметы и доставай их одной командой. §lUndo§r — не бойся ошибиться.",
+  "authors": ["Gwerelka"],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/cie-command-item-editor",
+    "sources": "https://github.com/gwerelka-sudo/cie",
+    "issues": "https://github.com/gwerelka-sudo/cie/issues",
+    "email": "gwerelka@example.com",
+    "telegram": "https://t.me/unbreakablz"
+  },
+  "license": "MIT",
+  "icon": "assets/cie/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "com.cie.CIEClientMod"
+    ]
+  },
+  "mixins": [
+    "cie.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.18.0",
+    "minecraft": "~1.21.6",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}

@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="5d02f94a-259b-4f06-9d25-63a0a5f2bcdb" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/../1.21.9/README.md" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/cie.gif" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/gradle.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/gradlew" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/settings.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/CIEClientMod.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/command/CIECommand.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/mixin/ChatScreenMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/mixin/HandledScreenMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/mixin/ParentElementMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/mixin/ScreenMixin.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/ColorPickScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/ContainerEditScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/ContainerEditScreenHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/ItemContentsScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/ItemContentsScreenHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/MouseHistoryScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/MouseHistoryScreenHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/StorageScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/StorageScreenHandler.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/screen/armorStandEditScreen.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/text/CIELang.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/text/MiniMessageBridge.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ArmorStandDataUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/AttributeComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BannerUtil.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BlockAttacksUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BookComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BreakSoundUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BundleEditUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/BundleUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ChaosUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ClearInventoryUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColorComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColorPickerDataUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColorPickerFormatUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColorPickerHolder.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColorPickerWidget.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ColoringConfigUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/CommandHistoryUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ComponentClipboardUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ComponentDiffUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ConsumableComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ContainerEditUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ContainerUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/CustomModelDataUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/DamageResistantUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/DeathProtectionUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/DiffUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/EnchantmentComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/EnchantmentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/EntitySettingsUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/EquipUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/EquipableComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ExportUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/FireworksUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/FoodComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/GliderUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/GradientColorUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/GradientFormatArgumentType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/GradientFormatUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/GradientPresetUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ImportUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ItemModelUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/JukeboxPlayableUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/LivePreviewRenderer.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/LivePreviewUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/MacroUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/MaterialUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/MathUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/ModInfoUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/MouseHistoryUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/PlayerHeadUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/PotionContentsUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/RarityUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/RepairCostUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/RepairableUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/SignBlockEntityUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/SoundSettingsUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/SpawnerBlockEntityUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/StatsUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/StoragePageUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/StoragePicker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/StorageUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/SuspiciousStewEffectsUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/SwingAnimationUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/TemplateUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/TooltipDisplayUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/TrimComponentUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/UiColorDefaults.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/UiColorUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/UndoUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/UseCooldownUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/UseRemainderUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/VillagerDataUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/java/com/cie/util/WeaponUtil.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/resources/assets/cie/icon.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/resources/assets/cie/lang/en_us.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/resources/assets/cie/lang/ru_ru.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/resources/cie.mixins.json" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../1.21.9/src/main/resources/fabric.mod.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/runConfigurations/Minecraft_Client.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../.idea/runConfigurations/Minecraft_Server.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../README.md" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../build.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../build/libs/CIE-3.0.0+1.21.11.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../cie.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradle.properties" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../gradlew" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../settings.gradle" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/CIEClientMod.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/command/CIECommand.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/mixin/ChatScreenMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/mixin/HandledScreenMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/mixin/ParentElementMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/mixin/ScreenMixin.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/ColorPickScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/ContainerEditScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/ContainerEditScreenHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/ItemContentsScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/ItemContentsScreenHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/MouseHistoryScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/MouseHistoryScreenHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/StorageScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/StorageScreenHandler.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/screen/armorStandEditScreen.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/text/CIELang.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/text/MiniMessageBridge.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ArmorStandDataUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/AttributeComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BannerUtil.kt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BlockAttacksUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BookComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BreakSoundUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BundleEditUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/BundleUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ChaosUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ClearInventoryUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColorComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColorPickerDataUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColorPickerFormatUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColorPickerHolder.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColorPickerWidget.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ColoringConfigUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/CommandHistoryUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ComponentClipboardUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ComponentDiffUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ConsumableComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ContainerEditUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ContainerUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/CustomModelDataUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/DamageResistantUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/DeathProtectionUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/DiffUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/EnchantmentComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/EnchantmentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/EntitySettingsUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/EquipUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/EquipableComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ExportUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/FireworksUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/FoodComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/GliderUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/GradientColorUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/GradientFormatArgumentType.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/GradientFormatUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/GradientPresetUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ImportUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ItemModelUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/JukeboxPlayableUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/LivePreviewRenderer.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/LivePreviewUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/MacroUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/MaterialUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/MathUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/ModInfoUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/MouseHistoryUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/PotionContentsUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/RarityUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/RepairCostUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/RepairableUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/SignBlockEntityUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/SoundSettingsUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/SpawnerBlockEntityUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/StatsUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/StoragePageUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/StoragePicker.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/StorageUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/SuspiciousStewEffectsUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/SwingAnimationUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/TemplateUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/TooltipDisplayUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/TrimComponentUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/UiColorDefaults.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/UiColorUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/UndoUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/UseCooldownUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/UseRemainderUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/VillagerDataUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/java/com/cie/util/WeaponUtil.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/resources/assets/cie/icon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/resources/assets/cie/lang/en_us.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/resources/assets/cie/lang/ru_ru.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/resources/cie.mixins.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../src/main/resources/fabric.mod.json" beforeDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="cie" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="cie" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="cie" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="cie" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="fabric" type="c8890929:TasksNode$1" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 4,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3I5oHvT0aslTjKFxqDhNpWSTTqK" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.1.21.1 [build].executor": "Run",
+    "Gradle.1.21.1 [clean].executor": "Run",
+    "Gradle.1.21.1 [remapSourcesJar].executor": "Run",
+    "Gradle.1.21.1 [runClient].executor": "Run",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/suaks/Downloads/renamix (1)/renamix/versions/1.21.1",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RunAnythingCache">
+    <option name="myCommands">
+      <command value="./gradlew --refresh-dependencies runClient" />
+    </option>
+  </component>
+  <component name="RunManager" selected="Gradle.1.21.1 [runClient]">
+    <configuration name="1.21.1 [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="1.21.1 [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="1.21.1 [remapSourcesJar]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="remapSourcesJar" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration name="1.21.1 [runClient]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="runClient" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <ExternalSystemDebugDisabled>false</ExternalSystemDebugDisabled>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <GradleProfilingDisabled>false</GradleProfilingDisabled>
+      <GradleCoverageDisabled>false</GradleCoverageDisabled>
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="1.21.1" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="1.21.1" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Gradle.1.21.1 [runClient]" />
+        <item itemvalue="Gradle.1.21.1 [remapSourcesJar]" />
+        <item itemvalue="Gradle.1.21.1 [clean]" />
+        <item itemvalue="Gradle.1.21.1 [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-37e91769500f-intellij.indexing.shared.core-IU-261.24374.151" />
+        <option value="bundled-js-predefined-d6986cc7102b-31caf2ab9e3c-JavaScript-IU-261.24374.151" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="5d02f94a-259b-4f06-9d25-63a0a5f2bcdb" name="Changes" comment="" />
+      <created>1787063705743</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1787063705743</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>

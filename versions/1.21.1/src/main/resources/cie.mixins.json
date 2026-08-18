@@ -1,0 +1,12 @@
+{
+  "required": true,
+  "package": "com.cie.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "HandledScreenMixin",
+    "ChatScreenMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
